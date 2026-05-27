@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">onseven</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="pass-overlay">
+    <div id="pass-box">
+      <div class="pi">🔐</div>
+      <h3>Доступ обмежено</h3>
+      <p>Введіть пароль для входу в панель керування</p>
+      <input type="password" id="pass-input" placeholder="••••••" maxlength="32">
+      <div id="pass-error">❌ Невірний пароль</div>
+      <button id="pass-btn">Увійти →</button>
+      <button id="pass-cancel">Скасувати</button>
+    </div>
+  </div>
+
+  <button id="admin-toggle" hidden>⚙️ Редагувати сайт</button>
+  <div id="toast"></div>
+
+  <aside id="admin-panel">
+    <div class="ap-header">
+      <h2>⚙️ Панель керування</h2>
+      <button class="ap-close" type="button">×</button>
+    </div>
+    <div class="ap-tabs">
+      <button class="ap-tab active" data-tab="t-shop">Магазин</button>
+      <button class="ap-tab" data-tab="t-hero">Банер</button>
+      <button class="ap-tab" data-tab="t-adv">Переваги</button>
+      <button class="ap-tab" data-tab="t-prod">Товари</button>
+      <button class="ap-tab" data-tab="t-rev">Відгуки</button>
+      <button class="ap-tab" data-tab="t-help">Інструкція</button>
+    </div>
+
+    <div id="t-shop" class="ap-tc active">
+      <div class="ap-sec">
+        <h3>🏪 Магазин</h3>
+        <div class="af"><label>Назва</label><input id="s-name" placeholder="Назва магазину"></div>
+        <div class="af"><label>Телефон</label><input id="s-phone" placeholder="+380 00 000 00 00"></div>
+        <div class="af"><label>Formspree endpoint для пошти </label><input id="s-form-endpoint" placeholder="https://formspree.io/f/xxxxxxxx"></div>
+        <div class="af"><label>Футер (копірайт)</label><input id="s-footer" placeholder="© 2026 Назва"></div>
+        <button class="ab" id="save-shop">💾 Зберегти</button>
+      </div>
+    </div>
+
+    <div id="t-hero" class="ap-tc">
+      <div class="ap-sec">
+        <h3>🖼️ Головний банер</h3>
+        <div class="af"><label>Заголовок (рядок 1)</label><input id="h-t1" placeholder="Ідеальний швидкий ремонт"></div>
+        <div class="af"><label>Заголовок (рядок 2)</label><input id="h-t2" placeholder="назва товару"></div>
+        <div class="af"><label>URL головного фото</label><input id="h-img" placeholder="https://..."></div>
+        <div class="af"><label>Стара ціна</label><input id="h-op" placeholder="116 грн/шт"></div>
+        <div class="af"><label>Нова ціна</label><input id="h-np" placeholder="49 грн/шт"></div>
+        <div class="af"><label>Залишок (кількість)</label><input id="h-stock" placeholder="150"></div>
+        <button class="ab" id="save-hero">💾 Зберегти банер</button>
+      </div>
+    </div>
+
+    <div id="t-adv" class="ap-tc">
+      <div class="ap-sec">
+        <h3>✅ Переваги (по одному в рядок)</h3>
+        <div class="af"><textarea id="a-list" placeholder="Термін служби від 10 років&#10;Висока вологостійкість&#10;Швидкий монтаж"></textarea></div>
+        <div class="af">
+          <label>Характеристики (по рядку: Назва: значення)</label>
+          <textarea id="a-specs" placeholder="Розміри: 770×700×3 мм&#10;Матеріал: вініл&#10;Площа 1 панелі: 0.54 м²"></textarea>
+        </div>
+        <button class="ab" id="save-adv">💾 Зберегти</button>
+      </div>
+    </div>
+
+    <div id="t-prod" class="ap-tc">
+      <div class="ap-sec">
+        <h3>➕ Новий товар</h3>
+        <div class="af"><label>Назва</label><input id="p-name" placeholder="Назва"></div>
+        <div class="af"><label>Опис</label><textarea id="p-desc" placeholder="Короткий опис..."></textarea></div>
+        <div class="af"><label>Стара ціна</label><input id="p-op" placeholder="116 грн"></div>
+        <div class="af"><label>Нова ціна</label><input id="p-np" placeholder="49 грн"></div>
+        <div class="af"><label>Знижка</label><input id="p-badge" placeholder="-40%"></div>
+        <div class="af"><label>URL фото</label><input id="p-img" placeholder="https://..."></div>
+        <button class="ab" id="add-prod">➕ Додати товар</button>
+      </div>
+      <div class="ap-sec">
+        <h3>📦 Список товарів</h3>
+        <div class="pal" id="pal"></div>
+      </div>
+    </div>
+
+    <div id="t-rev" class="ap-tc">
+      <div class="ap-sec">
+        <h3>➕ Новий відгук</h3>
+        <div class="af"><label>Ім'я та вік</label><input id="r-name" placeholder="Андрій, 32 роки"></div>
+        <div class="af"><label>Коли</label><input id="r-date" placeholder="сьогодні"></div>
+        <div class="af"><label>Текст відгуку</label><textarea id="r-text" placeholder="Дуже задоволений..."></textarea></div>
+        <div class="af"><label>URL аватарки</label><input id="r-img" placeholder="https://..."></div>
+        <button class="ab" id="add-rev">➕ Додати відгук</button>
+      </div>
+      <div class="ap-sec">
+        <h3>💬 Відгуки</h3>
+        <div class="pal" id="ral"></div>
+      </div>
+    </div>
+
+    <div id="t-help" class="ap-tc">
+      <div class="ap-sec">
+        <h3>📖 Інструкція</h3>
+        <div class="inst">
+          <ol>
+            <li><strong>Пароль за замовчуванням: <code>admin123</code></strong>. Змініть його у файлі <code>app.js</code> у рядку <code>ADMIN_PASSWORD</code>.</li>
+            <li>Щоб відкрити вхід адміністратора, додайте до адреси сайту <code>?admin=1</code> або натисніть <code>Ctrl + Alt + A</code>, або 5 разів клікніть по назві магазину в шапці.</li>
+            <li>Кнопка «Редагувати сайт» з'являється тільки після успішного входу.</li>
+            <li><strong>Пошта замовника</strong> - найпростіше створити Formspree-форму на email власника магазину і вставити endpoint у поле «Formspree endpoint». Якщо endpoint заповнений, сайт відправляє замовлення через нього.</li>
+            <li>Усі зміни зберігаються у браузері автоматично.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="modal-bg" id="qmodal">
+    <div class="modal-box">
+      <button class="modal-x" type="button">×</button>
+      <div class="modal-title">🛒 Оформити замовлення</div>
+      <div class="modal-prod" id="mprod"></div>
+      <div id="mfields">
+        <div class="ff"><label>Ваше ім'я *</label><input id="m-name" placeholder="Іван Іванов"></div>
+        <div class="ff"><label>Телефон *</label><input id="m-phone" placeholder="+380 00 000 00 00"></div>
+        <div class="ff"><label>Коментар</label><input id="m-comment" placeholder="Колір, кількість..."></div>
+        <button class="btn-submit" id="submit-modal">Замовити →</button>
+      </div>
+      <div class="modal-ok" id="mok">✅ Замовлення прийнято! Зв'яжемось з вами.</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <header class="site-header">
+      <div class="logo" id="hlogo">Магазин</div>
+      <a class="hphone" id="hphone" href="tel:+380000000000">+380 00 000 00 00</a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-badge">🔥 Акційна пропозиція</div>
+        <h1 id="hero-title">Ідеальний товар для вас</h1>
+        <img id="hero-img" class="hero-img" src="https://placehold.co/600x400/e8f5e9/2e7d32?text=Фото+товару" alt="Товар">
+        <div class="hero-prices">
+          <div>
+            <div class="old-price" id="hero-op">116 грн/шт</div>
+            <div class="new-price" id="hero-np">49 грн/шт</div>
+          </div>
+          <div class="price-label">Ціна<br>сьогодні</div>
+        </div>
+        <div class="hero-stock">⚡ Залишилось <span id="hero-stock-val">150</span> шт за акційною ціною</div>
+        <a href="#order" class="btn-hero">Обрати варіант ↓</a>
+      </section>
+
+      <section class="advantages">
+        <h2>Переваги товару</h2>
+        <ul class="adv-list" id="adv-list"></ul>
+        <div class="specs" id="specs-box"></div>
+      </section>
+
+      <section class="catalog" id="cat">
+        <h2>Асортимент</h2>
+        <div class="cat-grid" id="cat-grid"></div>
+      </section>
+
+      <section class="reviews">
+        <h2>Відгуки покупців</h2>
+        <div id="reviews-list"></div>
+      </section>
+
+      <section class="how">
+        <h2>Як зробити замовлення?</h2>
+        <div class="steps">
+          <div class="step"><div class="step-num">1</div><div class="step-title">Заявка</div><div class="step-desc">Заповніть форму на сайті</div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-title">Дзвінок</div><div class="step-desc">Менеджер зателефонує для уточнення</div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-title">Відправлення</div><div class="step-desc">Доставка 1-2 робочі дні</div></div>
+          <div class="step"><div class="step-num">4</div><div class="step-title">Оплата</div><div class="step-desc">Після отримання та перевірки</div></div>
+        </div>
+      </section>
+
+      <section class="order-section" id="order">
+        <h2>Оформити замовлення</h2>
+        <p class="order-sub">Заповніть форму - зателефонуємо протягом 15 хвилин</p>
+        <div class="oform">
+          <div id="ofields">
+            <div class="ff"><label>Ваше ім'я *</label><input id="o-name" placeholder="Іван Іванов"></div>
+            <div class="ff"><label>Телефон *</label><input id="o-phone" placeholder="+380 00 000 00 00"></div>
+            <div class="ff">
+              <label>Оберіть варіант</label>
+              <select id="o-prod"><option value="">- Оберіть товар -</option></select>
+            </div>
+            <div class="ff"><label>Місто / Нова Пошта</label><input id="o-city" placeholder="Київ, відд. №5"></div>
+            <div class="ff"><label>Коментар</label><textarea id="o-comment" placeholder="Будь-які побажання..."></textarea></div>
+            <button class="btn-submit" id="submit-form">Оформити замовлення →</button>
+          </div>
+          <div class="form-ok" id="form-ok">✅ Дякуємо! Ваше замовлення прийнято. Зателефонуємо найближчим часом.</div>
+        </div>
+        <div class="stock-note">Залишилося <span id="stock-note-val">150</span> шт за акційною ціною</div>
+      </section>
+    </main>
+
+    <footer>
+      <p id="footer-text">© 2026 Магазин · Усі права захищені</p>
+      <p class="footer-links">
+        <a href="#">Політика конфіденційності</a>
+        <a href="#">Угода користувача</a>
+        <a href="#">Обмін і повернення</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
