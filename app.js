@@ -92,11 +92,19 @@ function saveShared(){
     },
     body:JSON.stringify(S)
   })
-    .then(response => {
-      if(!response.ok) throw new Error('save_error');
+    .then(async response => {
+      if(response.ok) return;
+      let details = '';
+      try{
+        const result = await response.json();
+        details = result.error ? ': ' + result.error : '';
+      }catch(e){}
+      if(response.status === 404) throw new Error('Netlify Function не знайдена');
+      if(response.status === 401) throw new Error('пароль адмінки не збігається');
+      throw new Error('Netlify Function помилка ' + response.status + details);
     })
-    .catch(() => {
-      toast('⚠️ Збережено тільки у цьому браузері. Для змін для всіх потрібен PHP-хостинг.');
+    .catch(error => {
+      toast('⚠️ Збережено тільки у цьому браузері. ' + error.message);
     });
 }
 
