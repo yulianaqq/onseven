@@ -222,7 +222,6 @@ function renderAdminLists(){
 function fillAdmin(){
   $('s-name').value = S.name;
   $('s-phone').value = S.phone;
-  $('s-email').value = S.email || '';
   $('s-form-endpoint').value = S.formEndpoint || '';
   $('s-footer').value = S.footer;
   $('h-t1').value = S.hero.t1;
@@ -245,7 +244,6 @@ function tab(id){
 function saveShop(){
   S.name = v('s-name') || S.name;
   S.phone = v('s-phone') || S.phone;
-  S.email = v('s-email');
   S.formEndpoint = v('s-form-endpoint').trim() || DEFAULT_FORM_ENDPOINT;
   S.footer = v('s-footer') || S.footer;
   save(); render(); toast('✅ Збережено!');

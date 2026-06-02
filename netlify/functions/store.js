@@ -21,27 +21,27 @@ const sanitize = data => {
   }, {});
 };
 
-export default async request => {
+export const handler = async event => {
   const store = getStore(STORE_NAME);
 
-  if(request.method === 'GET'){
+  if(event.httpMethod === 'GET'){
     const data = await store.get(STORE_KEY, { type: 'json' });
     if(!data) return json(404, { ok:false, error:'not_found' });
     return json(200, data);
   }
 
-  if(request.method !== 'POST'){
+  if(event.httpMethod !== 'POST'){
     return json(405, { ok:false, error:'method_not_allowed' });
   }
 
   const adminPassword = process.env.STORE_ADMIN_PASSWORD || DEFAULT_ADMIN_PASSWORD;
-  if(request.headers.get('x-admin-password') !== adminPassword){
+  if(event.headers['x-admin-password'] !== adminPassword){
     return json(401, { ok:false, error:'unauthorized' });
   }
 
   let data;
   try{
-    data = await request.json();
+    data = JSON.parse(event.body || '{}');
   }catch(error){
     return json(400, { ok:false, error:'bad_json' });
   }
