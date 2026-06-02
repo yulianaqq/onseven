@@ -1,13 +1,18 @@
 const ADMIN_PASSWORD = 'admin123';
 const STORE_VERSION = 'defaults-2026-05-27';
+const DEFAULT_FORM_ENDPOINT = 'https://formspree.io/f/mzdwllqn';
+const SHARED_API_URL = '/.netlify/functions/store';
+const SHARED_DATA_URL = 'data.json';
+const DEFAULT_REVIEW_IMAGES = ['assets/review-1.jpg', 'assets/review-2.jpg', 'assets/review-3.jpg'];
 let adminUnlocked = false;
 let selProd = '';
+let adminPassword = '';
 
 let S = {
   name:'Магазин',
   phone:'+380 00 000 00 00',
   email:'',
-  formEndpoint:'',
+  formEndpoint:DEFAULT_FORM_ENDPOINT,
   footer:'© 2026 Магазин · Усі права захищені',
   hero:{t1:'Ідеальний товар для вас',t2:'',img:'',op:'116 грн/шт',np:'49 грн/шт',stock:'150'},
   adv:['Термін служби від десяти років та вище','Висока вологостійкість','Стійкий до механічних пошкоджень','Не деформується','Швидкий монтаж'],
@@ -24,6 +29,25 @@ const $ = id => document.getElementById(id);
 const v = id => $(id).value;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
+function mergeStore(data){
+  if(!data || typeof data !== 'object') return;
+  S = {...S, ...data};
+  S.hero = {...S.hero, ...(data.hero || {})};
+  S.adv = Array.isArray(data.adv) ? data.adv : S.adv;
+  S.specs = Array.isArray(data.specs) ? data.specs : S.specs;
+  S.products = Array.isArray(data.products) ? data.products : S.products;
+  S.products = S.products.map(product => ({
+    ...product,
+    img: DEFAULT_REVIEW_IMAGES.includes(product.img) ? '' : product.img
+  }));
+  S.reviews = Array.isArray(data.reviews) ? data.reviews : S.reviews;
+  S.reviews = S.reviews.map((review, index) => ({
+    ...review,
+    img: review.img || DEFAULT_REVIEW_IMAGES[index] || ''
+  }));
+  if(!S.formEndpoint) S.formEndpoint = DEFAULT_FORM_ENDPOINT;
+}
+
 function load(){
   try{
     if(localStorage.getItem('ls_store_version') !== STORE_VERSION){
@@ -32,12 +56,48 @@ function load(){
       return;
     }
     const data = localStorage.getItem('ls_store');
-    if(data) S = {...S, ...JSON.parse(data)};
+    if(data) mergeStore(JSON.parse(data));
   }catch(e){}
+  if(!S.formEndpoint) S.formEndpoint = DEFAULT_FORM_ENDPOINT;
 }
 
 function save(){
   localStorage.setItem('ls_store', JSON.stringify(S));
+  saveShared();
+}
+
+function loadShared(){
+  if(location.protocol === 'file:') return Promise.resolve();
+  return fetch(SHARED_API_URL + '?v=' + Date.now(), {cache:'no-store'})
+    .then(response => {
+      if(response.ok) return response.json();
+      return fetch(SHARED_DATA_URL + '?v=' + Date.now(), {cache:'no-store'})
+        .then(fallback => fallback.ok ? fallback.json() : null);
+    })
+    .then(data => {
+      mergeStore(data);
+      localStorage.setItem('ls_store', JSON.stringify(S));
+    })
+    .catch(() => {});
+}
+
+function saveShared(){
+  if(location.protocol === 'file:') return;
+  if(!adminUnlocked || !adminPassword) return;
+  fetch(SHARED_API_URL, {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'X-Admin-Password':adminPassword
+    },
+    body:JSON.stringify(S)
+  })
+    .then(response => {
+      if(!response.ok) throw new Error('save_error');
+    })
+    .catch(() => {
+      toast('⚠️ Збережено тільки у цьому браузері. Для змін для всіх потрібен PHP-хостинг.');
+    });
 }
 
 function openPass(){
@@ -54,6 +114,7 @@ function closePass(){
 function checkPass(){
   if($('pass-input').value === ADMIN_PASSWORD){
     adminUnlocked = true;
+    adminPassword = $('pass-input').value;
     $('admin-toggle').hidden = false;
     closePass();
     openAdmin();
@@ -84,6 +145,7 @@ function closeAdmin(){
 
 function logoutAdmin(){
   adminUnlocked = false;
+  adminPassword = '';
   $('admin-toggle').hidden = true;
   closeAdmin();
 }
@@ -126,7 +188,7 @@ function render(){
   $('reviews-list').innerHTML = S.reviews.map(r => {
     const initial = esc((r.name.trim()[0] || '?').toUpperCase());
     return `<div class="review">
-      <div class="rev-ava">${r.img ? `<img src="${esc(r.img)}" alt="${esc(r.name)}">` : initial}</div>
+      <div class="rev-ava">${r.img ? `<img src="${esc(r.img)}" alt="${esc(r.name)}" onerror="this.remove();this.parentElement.textContent='${initial}'">` : initial}</div>
       <div class="rev-info">
         <div class="rev-name">${esc(r.name)}</div>
         <div class="rev-meta">${esc(r.date)}</div>
@@ -184,7 +246,7 @@ function saveShop(){
   S.name = v('s-name') || S.name;
   S.phone = v('s-phone') || S.phone;
   S.email = v('s-email');
-  S.formEndpoint = v('s-form-endpoint');
+  S.formEndpoint = v('s-form-endpoint').trim() || DEFAULT_FORM_ENDPOINT;
   S.footer = v('s-footer') || S.footer;
   save(); render(); toast('✅ Збережено!');
 }
@@ -390,5 +452,7 @@ function bindEvents(){
 }
 
 load();
-render();
-bindEvents();
+loadShared().then(() => {
+  render();
+  bindEvents();
+});
