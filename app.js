@@ -323,19 +323,24 @@ function submitModal(){
   const name = v('m-name').trim();
   const phone = v('m-phone').trim();
   if(!name || !phone){ alert('Введіть ім’я та телефон'); return; }
-  sendOrder({name,phone,product:selProd,comment:v('m-comment'),city:''});
   $('mfields').style.display = 'none';
   $('mok').style.display = 'block';
-  setTimeout(closeModal, 2500);
+  Promise.race([
+    sendOrder({name,phone,product:selProd,comment:v('m-comment'),city:''}),
+    new Promise(resolve => setTimeout(resolve, 1500))
+  ]).then(goToThankYou);
 }
 
 function submitForm(){
   const name = v('o-name').trim();
   const phone = v('o-phone').trim();
   if(!name || !phone){ alert('Введіть ім’я та телефон'); return; }
-  sendOrder({name,phone,product:v('o-prod'),city:v('o-city'),comment:v('o-comment')});
   $('ofields').style.display = 'none';
   $('form-ok').style.display = 'block';
+  Promise.race([
+    sendOrder({name,phone,product:v('o-prod'),city:v('o-city'),comment:v('o-comment')}),
+    new Promise(resolve => setTimeout(resolve, 1500))
+  ]).then(goToThankYou);
 }
 
 function sendOrder(d){
@@ -344,16 +349,15 @@ function sendOrder(d){
   localStorage.setItem('ls_orders', JSON.stringify(orders.slice(0, 100)));
 
   if(S.formEndpoint){
-    sendFormspreeOrder(d);
-    return;
+    return sendFormspreeOrder(d);
   }
 
   if(!S.email){
     toast('⚠️ Email або Formspree endpoint не вказано');
-    return;
+    return Promise.resolve();
   }
 
-  fetch('send_order.php', {
+  return fetch('send_order.php', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({
@@ -378,7 +382,7 @@ function sendOrder(d){
 }
 
 function sendFormspreeOrder(d){
-  fetch(S.formEndpoint, {
+  return fetch(S.formEndpoint, {
     method:'POST',
     headers:{
       'Content-Type':'application/json',
@@ -402,6 +406,10 @@ function sendFormspreeOrder(d){
     .catch(() => {
       toast('⚠️ Не вдалося надіслати. Перевірте Formspree endpoint');
     });
+}
+
+function goToThankYou(){
+  window.location.href = 'thank-you.html';
 }
 
 function toast(msg){

@@ -3,70 +3,279 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Дякуємо за замовлення</title>
+  <title>SEVENSHOP — Дякуємо за замовлення</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
 
   <!-- Meta Pixel Code -->
-  <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init', '984800621025850');fbq('track', 'PageView');</script>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=984800621025850&ev=PageView&noscript=1"/></noscript>
-  <!-- End Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){
+      if(f.fbq)return;
+      n=f.fbq=function(){
+        n.callMethod ? n.callMethod.apply(n,arguments) : n.queue.push(arguments)
+      };
+      if(!f._fbq)f._fbq=n;
+      n.push=n;
+      n.loaded=!0;
+      n.version='2.0';
+      n.queue=[];
+      t=b.createElement(e);
+      t.async=!0;
+      t.src=v;
+      s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s);
+    }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', '984800621025850');
+    fbq('track', 'PageView');
+  </script>
+
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=984800621025850&ev=PageView&noscript=1"/>
+  </noscript>
 
   <style>
-    .ty-hero{ padding:64px 24px 76px; min-height:60vh; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-    .ty-check{
-      width:78px; height:78px; margin:0 auto 22px;
-      display:grid; place-items:center;
-      border-radius:50%;
-      background:rgba(255,255,255,.2);
-      border:2px solid rgba(255,255,255,.5);
-      color:#fff; font-size:40px; font-weight:900;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
     }
-    .ty-sub{
-      max-width:420px; margin:0 auto 28px;
-      color:rgba(255,255,255,.92);
-      font-size:14px; font-weight:700; line-height:1.55;
+
+    body{
+      font-family:'Roboto',sans-serif;
+      min-height:100vh;
+      background:linear-gradient(135deg,#f5f7f0,#eef4e4);
+      color:#1f2937;
+    }
+
+    .wrap{
+      max-width:1200px;
+      margin:0 auto;
+      padding:20px;
+    }
+
+    .site-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:#9BC900;
+      padding:22px 35px;
+      border-radius:24px 24px 0 0;
+    }
+
+    .logo{
+      font-size:30px;
+      font-weight:900;
+      color:#fff;
+      letter-spacing:.5px;
+    }
+
+    .hphone{
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      padding:12px 22px;
+      border:1px solid rgba(255,255,255,.3);
+      border-radius:50px;
+      transition:.3s;
+    }
+
+    .hphone:hover{
+      background:rgba(255,255,255,.15);
+    }
+
+    .thankyou-section{
+      background:#fff;
+      padding:90px 40px;
+      text-align:center;
+      border-radius:0 0 24px 24px;
+      box-shadow:0 20px 60px rgba(0,0,0,.08);
+    }
+
+    .success-icon{
+      width:120px;
+      height:120px;
+      margin:0 auto 30px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:58px;
+      color:#fff;
+      font-weight:900;
+      background:linear-gradient(135deg,#9BC900,#B9E11A);
+      box-shadow:0 15px 40px rgba(155,201,0,.35);
+    }
+
+    h1{
+      font-size:48px;
+      font-weight:900;
+      margin-bottom:20px;
+    }
+
+    .subtitle{
+      max-width:700px;
+      margin:0 auto 50px;
+      color:#6B7280;
+      font-size:18px;
+      line-height:1.7;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:20px;
+      margin:0 auto 50px;
+      max-width:950px;
+    }
+
+    .info-card{
+      background:#f8fafc;
+      padding:25px;
+      border-radius:18px;
+      transition:.3s;
+    }
+
+    .info-card:hover{
+      transform:translateY(-5px);
+      box-shadow:0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .icon{
+      font-size:34px;
+      margin-bottom:12px;
+    }
+
+    .info-card p{
+      font-weight:600;
+      line-height:1.5;
+      color:#374151;
+    }
+
+    .btn-home{
+      display:inline-block;
+      text-decoration:none;
+      color:#fff;
+      background:linear-gradient(135deg,#9BC900,#B9E11A);
+      padding:18px 40px;
+      border-radius:14px;
+      font-size:18px;
+      font-weight:700;
+      box-shadow:0 12px 30px rgba(155,201,0,.35);
+      transition:.3s;
+    }
+
+    .btn-home:hover{
+      transform:translateY(-4px);
+    }
+
+    footer{
+      text-align:center;
+      padding:30px 20px;
+      color:#6B7280;
+      font-weight:500;
+    }
+
+    @media(max-width:768px){
+      .site-header{
+        flex-direction:column;
+        gap:15px;
+      }
+
+      h1{
+        font-size:34px;
+      }
+
+      .thankyou-section{
+        padding:60px 20px;
+      }
+
+      .info-grid{
+        grid-template-columns:1fr;
+      }
+
+      .success-icon{
+        width:100px;
+        height:100px;
+        font-size:48px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <header class="site-header">
-      <div class="logo" id="hlogo">Магазин</div>
-      <a class="hphone" id="hphone" href="tel:+380000000000">+380 00 000 00 00</a>
-    </header>
 
-    <main>
-      <section class="hero ty-hero">
-        <div class="ty-check">✓</div>
-        <h1>Дякуємо за замовлення</h1>
-        <p class="ty-sub">Ми отримали вашу заявку. Менеджер зв'яжеться з вами найближчим часом для підтвердження.</p>
-        <a href="index.html" class="btn-hero">← На головну</a>
-      </section>
-    </main>
+<div class="wrap">
 
-    <footer>
-      <p id="footer-text">© 2026 Магазин · Усі права захищені</p>
-    </footer>
-  </div>
+  <header class="site-header">
+    <div class="logo" id="hlogo">SEVENSHOP</div>
 
-  <script>
-    // Підтягуємо назву магазину/телефон з налаштувань адмінки (якщо вони вже збережені в цьому браузері)
-    try {
-      var raw = localStorage.getItem('ls_store');
-      if (raw) {
-        var data = JSON.parse(raw);
-        if (data && data.name) document.getElementById('hlogo').textContent = data.name;
-        if (data && data.phone) {
-          var phoneEl = document.getElementById('hphone');
-          phoneEl.textContent = data.phone;
-          phoneEl.href = 'tel:' + data.phone.replace(/\s/g, '');
-        }
-        if (data && data.footer) document.getElementById('footer-text').textContent = data.footer;
-      }
-    } catch (e) {}
-  </script>
+    <a class="hphone" id="hphone" href="tel:+380000000000">
+      +380 00 000 00 00
+    </a>
+  </header>
+
+  <main class="thankyou-section">
+
+    <div class="success-icon">✓</div>
+
+    <h1>Дякуємо за замовлення!</h1>
+
+    <p class="subtitle">
+      Ваше замовлення успішно оформлено. Наш менеджер зв'яжеться з вами найближчим часом для підтвердження замовлення та уточнення деталей доставки.
+    </p>
+
+    <div class="info-grid">
+
+      <div class="info-card">
+        <div class="icon">⏱️</div>
+        <p>Передзвонимо протягом 15 хвилин</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icon">🚚</div>
+        <p>Швидка доставка по всій Україні</p>
+      </div>
+
+      <div class="info-card">
+        <div class="icon">💳</div>
+        <p>Оплата при отриманні товару</p>
+      </div>
+
+    </div>
+
+    <a href="index.html" class="btn-home">
+      ← Повернутися на головну
+    </a>
+
+  </main>
+
+  <footer>
+    <p id="footer-text">
+      © 2026 SEVENSHOP · Усі права захищені
+    </p>
+  </footer>
+
+</div>
+
+<script>
+try {
+  var raw = localStorage.getItem('ls_store');
+
+  if (raw) {
+    var data = JSON.parse(raw);
+
+    if (data && data.phone) {
+      var phoneEl = document.getElementById('hphone');
+      phoneEl.textContent = data.phone;
+      phoneEl.href = 'tel:' + data.phone.replace(/\s/g, '');
+    }
+  }
+} catch(e){}
+</script>
+
 </body>
 </html>
